@@ -25,7 +25,7 @@ public class MainPage extends JFrame implements ActionListener {
 
         enrollButton = new JButton("Add Tour Booking");
         enrollButton.addActionListener(this);
-        searchButton = new JButton("Search Bookings");
+        searchButton = new JButton("Search Bookingss");
         searchButton.addActionListener(this);
         exitButton = new JButton("Exit");
         exitButton.addActionListener(this);
