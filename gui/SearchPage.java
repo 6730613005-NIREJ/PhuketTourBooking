@@ -24,26 +24,25 @@ public class SearchPage extends JFrame implements ActionListener {
     public SearchPage() {
         super("Phuket Tour Booking Manager - Search");
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        setSize(900, 600);
+        setSize(1000, 680);
         setLocationRelativeTo(null);
 
-        JLabel titleLabel = new JLabel("Search Bookings", SwingConstants.CENTER);
-        titleLabel.setForeground(Color.BLUE);
-        titleLabel.setFont(new Font("", Font.BOLD, 20));
+        JLabel titleLabel = GuiStyle.title("Search Bookings");
 
-        String[] criteria = {"Customer name contains", "Price per person >=",
+        String[] criteria = {"All tours", "Customer name contains", "Price per person >=",
                 "Total price >=", "Number of guests >=", "Number of islands >=",
                 "Activity type contains", "Show time contains"};
         criteriaBox = new JComboBox<>(criteria);
+        criteriaBox.addActionListener(this);
         valueTxt = new JTextField(20);
+        valueTxt.setEnabled(false);
 
         searchBtn = new JButton("Search");
         searchBtn.addActionListener(this);
         backBtn = new JButton("Back to Main Page");
         backBtn.addActionListener(this);
 
-        JPanel topPanel = new JPanel();
-        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JPanel topPanel = GuiStyle.card();
         topPanel.add(new JLabel("Search by"));
         topPanel.add(criteriaBox);
         topPanel.add(new JLabel("Value"));
@@ -53,13 +52,26 @@ public class SearchPage extends JFrame implements ActionListener {
 
         searchResults = new JTextArea();
         searchResults.setEditable(false);
-        searchResults.append("Results:\n");
+        searchResults.setLineWrap(true);
+        searchResults.setWrapStyleWord(true);
+        searchResults.append("Choose a search field, enter a value, then select Search.\n");
         JScrollPane scrollPane = new JScrollPane(searchResults);
-        scrollPane.setPreferredSize(new Dimension(900, 450));
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240)));
+        JPanel resultsPanel = new JPanel(new BorderLayout(0, 8));
+        resultsPanel.setBorder(BorderFactory.createEmptyBorder(4, 22, 22, 22));
+        JLabel resultsLabel = new JLabel("Results");
+        resultsLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+        resultsLabel.setForeground(GuiStyle.NAVY);
+        resultsPanel.add(resultsLabel, BorderLayout.NORTH);
+        resultsPanel.add(scrollPane, BorderLayout.CENTER);
 
-        add(titleLabel, BorderLayout.NORTH);
-        add(topPanel, BorderLayout.CENTER);
-        add(scrollPane, BorderLayout.SOUTH);
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setOpaque(false);
+        headerPanel.add(titleLabel, BorderLayout.NORTH);
+        headerPanel.add(topPanel, BorderLayout.SOUTH);
+        add(headerPanel, BorderLayout.NORTH);
+        add(resultsPanel, BorderLayout.CENTER);
+        GuiStyle.apply(this);
         setVisible(true);
     }
 
@@ -67,7 +79,10 @@ public class SearchPage extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String actionCommand = e.getActionCommand();
 
-        if (actionCommand.equals("Back to Main Page")) {
+        if (e.getSource() == criteriaBox) {
+            valueTxt.setEnabled(!"All tours".equals(criteriaBox.getSelectedItem()));
+            if (!valueTxt.isEnabled()) valueTxt.setText("");
+        } else if (actionCommand.equals("Back to Main Page")) {
             dispose();
         } else if (actionCommand.equals("Search")) {
             doSearch();
@@ -78,7 +93,7 @@ public class SearchPage extends JFrame implements ActionListener {
         String criteria = (String) criteriaBox.getSelectedItem();
         String value = valueTxt.getText().trim();
 
-        if (value.equals("")) {
+        if (!"All tours".equals(criteria) && value.equals("")) {
             JOptionPane.showMessageDialog(this, "Please enter a search value.");
             return;
         }
@@ -87,7 +102,9 @@ public class SearchPage extends JFrame implements ActionListener {
             List<TourInterface> all = TourDatabase.getTours();
             List<TourInterface> results = new ArrayList<>();
 
-            if (criteria.equals("Customer name contains")) {
+            if (criteria.equals("All tours")) {
+                results = new ArrayList<>(all);
+            } else if (criteria.equals("Customer name contains")) {
                 results = searchByCustomerName(all, value);
             } else if (criteria.equals("Price per person >=")) {
                 results = searchByPrice(all, Double.parseDouble(value));

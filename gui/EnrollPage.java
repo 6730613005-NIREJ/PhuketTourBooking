@@ -38,12 +38,10 @@ public class EnrollPage extends JFrame implements ActionListener {
     public EnrollPage() {
         super("Phuket Tour Booking Manager - Add Booking");
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        setSize(900, 700);
+        setSize(1000, 760);
         setLocationRelativeTo(null);
 
-        JLabel titleLabel = new JLabel("Tour Booking Entry", SwingConstants.CENTER);
-        titleLabel.setForeground(Color.BLUE);
-        titleLabel.setFont(new Font("", Font.BOLD, 20));
+        JLabel titleLabel = GuiStyle.title("Create a Tour Booking");
 
         // ----- common part (same for every category) -----
         String[] categories = {"Sea Tour", "Land Tour", "Show Ticket"};
@@ -55,7 +53,7 @@ public class EnrollPage extends JFrame implements ActionListener {
         priceTxt = new JTextField();
         guestsTxt = new JTextField();
 
-        JPanel formPanel = new JPanel();
+        JPanel formPanel = GuiStyle.card();
         formPanel.setLayout(new GridLayout(6, 2, 10, 10));
         formPanel.add(new JLabel("Tour category"));
         formPanel.add(categoryBox);
@@ -74,7 +72,7 @@ public class EnrollPage extends JFrame implements ActionListener {
         String[] boats = {"Speedboat", "Catamaran", "Yacht", "None"};
         boatBox = new JComboBox<>(boats);
         islandsTxt = new JTextField("0");
-        JPanel seaPanel = new JPanel();
+        JPanel seaPanel = GuiStyle.card();
         seaPanel.setLayout(new GridLayout(2, 2, 10, 10));
         seaPanel.add(new JLabel("Boat type"));
         seaPanel.add(boatBox);
@@ -86,7 +84,7 @@ public class EnrollPage extends JFrame implements ActionListener {
                 "Rafting", "Zipline", "City Tour"};
         activityBox = new JComboBox<>(activities);
         pickupBox = new JCheckBox();
-        JPanel landPanel = new JPanel();
+        JPanel landPanel = GuiStyle.card();
         landPanel.setLayout(new GridLayout(2, 2, 10, 10));
         landPanel.add(new JLabel("Activity type"));
         landPanel.add(activityBox);
@@ -97,7 +95,7 @@ public class EnrollPage extends JFrame implements ActionListener {
         showTimeTxt = new JTextField();
         String[] seats = {"Standard", "VIP", "Entry"};
         seatBox = new JComboBox<>(seats);
-        JPanel showPanel = new JPanel();
+        JPanel showPanel = GuiStyle.card();
         showPanel.setLayout(new GridLayout(2, 2, 10, 10));
         showPanel.add(new JLabel("Show time (e.g. 18:00 or All day)"));
         showPanel.add(showTimeTxt);
@@ -119,6 +117,7 @@ public class EnrollPage extends JFrame implements ActionListener {
         backBtn = new JButton("Back to Main Page");
         backBtn.addActionListener(this);
         JPanel btnPanel = new JPanel();
+        btnPanel.setOpaque(false);
         btnPanel.add(addBtn);
         btnPanel.add(clearBtn);
         btnPanel.add(backBtn);
@@ -126,7 +125,10 @@ public class EnrollPage extends JFrame implements ActionListener {
         // ----- list of all bookings -----
         listArea = new JTextArea();
         listArea.setEditable(false);
+        listArea.setLineWrap(true);
+        listArea.setWrapStyleWord(true);
         JScrollPane scrollPane = new JScrollPane(listArea);
+        scrollPane.setBorder(BorderFactory.createTitledBorder("Current bookings"));
 
         // ----- put everything on the window -----
         // inputPanel = form + category panel + buttons (only as tall as needed)
@@ -145,6 +147,8 @@ public class EnrollPage extends JFrame implements ActionListener {
         add(bottomPanel, BorderLayout.CENTER);
 
         showAllBookings();
+        GuiStyle.apply(this);
+        GuiStyle.useBlackFormText(this);
         setVisible(true);
     }
 

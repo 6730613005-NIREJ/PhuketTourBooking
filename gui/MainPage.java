@@ -16,12 +16,10 @@ public class MainPage extends JFrame implements ActionListener {
     public MainPage() {
         setTitle("Phuket Tour Booking Manager");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 350);
+        setSize(520, 430);
         setLocationRelativeTo(null);
 
-        titleLabel = new JLabel("Phuket Tour Booking Manager", SwingConstants.CENTER);
-        titleLabel.setForeground(Color.BLUE);
-        titleLabel.setFont(new Font("", Font.BOLD, 18));
+        titleLabel = GuiStyle.title("Phuket Tour Booking");
 
         enrollButton = new JButton("Add Tour Booking");
         enrollButton.addActionListener(this);
@@ -30,26 +28,31 @@ public class MainPage extends JFrame implements ActionListener {
         exitButton = new JButton("Exit");
         exitButton.addActionListener(this);
 
-        enrollButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        searchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // same size for all 3 buttons
-        enrollButton.setPreferredSize(new Dimension(220, 50));
-        searchButton.setPreferredSize(new Dimension(220, 50));
-        exitButton.setPreferredSize(new Dimension(220, 50));
-
-        panel = new JPanel();
+        panel = GuiStyle.card();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(12, 55, 28, 55),
+                BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(226, 232, 240)),
+                        BorderFactory.createEmptyBorder(24, 30, 24, 30))));
+        JLabel subtitle = GuiStyle.subtitle("Your Phuket tour bookings, all in one place");
+        panel.add(subtitle);
+        panel.add(Box.createVerticalStrut(24));
+        for (JButton button : new JButton[]{enrollButton, searchButton, exitButton}) {
+            button.setAlignmentX(Component.CENTER_ALIGNMENT);
+            button.setMaximumSize(new Dimension(320, 48));
+        }
         panel.add(enrollButton);
-        panel.add(Box.createVerticalStrut(15));   // empty space between buttons
+        panel.add(Box.createVerticalStrut(14));
         panel.add(searchButton);
-        panel.add(Box.createVerticalStrut(15));
+        panel.add(Box.createVerticalStrut(14));
         panel.add(exitButton);
 
         add(titleLabel, BorderLayout.NORTH);
         add(panel, BorderLayout.CENTER);
+        GuiStyle.apply(this);
+        enrollButton.setForeground(Color.BLACK);
+        searchButton.setForeground(Color.BLACK);
+        exitButton.setForeground(Color.BLACK);
         setVisible(true);
     }
 
